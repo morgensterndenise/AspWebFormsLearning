@@ -1,0 +1,123 @@
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace DataTablesAndViewsExercise
+{
+    public partial class DataTbles : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+
+            CreateCustomersTable();
+
+        }
+
+        private void CreateCustomersTable()
+        {
+            // Create a new Data Table.
+            System.Data.DataTable custTable = new DataTable("Customers");
+            DataColumn dtColumn;
+            DataRow myDataRow;
+            // Create id Column
+            dtColumn = new DataColumn();
+            dtColumn.DataType = System.Type.GetType("System.Int32");
+            dtColumn.ColumnName = "id";
+           
+            // Add id column to the DataColumnCollection.
+            custTable.Columns.Add(dtColumn);
+
+            // create Name column.
+            dtColumn = new DataColumn();
+            dtColumn.DataType = System.Type.GetType("System.String");
+            dtColumn.ColumnName = "Name";
+            dtColumn.Caption = "Cust Name";
+           
+
+            // Add Name Column to the table.
+            custTable.Columns.Add(dtColumn);
+            // Create Address column.
+            dtColumn = new DataColumn();
+            dtColumn.DataType = System.Type.GetType("System.String");
+            dtColumn.ColumnName = "Address";
+            dtColumn.Caption = "Address";
+           
+            // Add Address column to the table.
+            custTable.Columns.Add(dtColumn);
+
+          
+
+            DataSet dtSet = new DataSet("Customers");
+
+            // Add the custTable to the DataSet.
+            dtSet.Tables.Add(custTable);
+
+            // Add rows to the custTable using NewRow method
+            // I add three customers with their addresses, name and id
+            myDataRow = custTable.NewRow();
+            myDataRow["id"] = 1001;
+            myDataRow["Address"] = "43 Lanewood Road, cito, CA";
+            myDataRow["Name"] = "George Bishop";
+            custTable.Rows.Add(myDataRow);
+            myDataRow = custTable.NewRow();
+            myDataRow["id"] = 1002;
+            myDataRow["name"] = "Rock joe";
+            myDataRow["Address"] = " kind of Prussia, PA";
+            custTable.Rows.Add(myDataRow);
+            myDataRow = custTable.NewRow();
+            myDataRow["id"] = 1003;
+            myDataRow["Name"] = "Miranda";
+            myDataRow["Address"] = "279 P. Avenue, Bridgetown, PA";
+
+            custTable.Rows.Add(myDataRow);
+
+            DataView dv = new DataView(custTable);
+
+            grv.DataSource = dtSet;
+            grv.DataBind();
+
+            AddNewDataRowView(dv);
+
+            grv2.DataSource = dtSet;
+            grv2.DataBind();
+
+            //this works ama go napravih v rowdatabound
+            foreach (System.Web.UI.WebControls.GridViewRow row in grv2.Rows)
+            {
+               
+                    System.Web.UI.WebControls.TableCell cell = new System.Web.UI.WebControls.TableCell();
+                    System.Web.UI.WebControls.LinkButton btn = new System.Web.UI.WebControls.LinkButton();
+                    btn.Text = "Details";
+                    btn.PostBackUrl = "~/Default.aspx?id=" + row.Cells[0].Text;
+                    cell.Controls.Add(btn);
+                    row.Cells.Add(cell);
+            }
+        }
+
+        //add row only on the view
+        private void AddNewDataRowView(DataView view)
+        {
+            DataRowView rowView = view.AddNew();
+            System.Web.UI.WebControls.LinkButton btn = new System.Web.UI.WebControls.LinkButton();
+            btn.Text = "Details";
+            rowView["Address"] = btn;
+            rowView.EndEdit();
+        }
+
+        protected void grv2_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+               //dinamically adding rows
+                    System.Web.UI.WebControls.TableCell cell = new System.Web.UI.WebControls.TableCell();
+                    System.Web.UI.WebControls.LinkButton btn = new System.Web.UI.WebControls.LinkButton();
+                    btn.Text = "Details";
+                    btn.PostBackUrl = "~/Default.aspx?id=" + e.Row.Cells[0].Text;
+                    cell.Controls.Add(btn);
+                    e.Row.Cells.Add(cell);
+        }
+    }
+}
