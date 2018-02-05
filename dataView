@@ -97,6 +97,20 @@ namespace DataTablesAndViewsExercise
                     cell.Controls.Add(btn);
                     row.Cells.Add(cell);
             }
+            
+            //tva e parche kod tuk si namiram indexa na reda po value miranda i go smeniam
+            DataView dv = new DataView(custTable, "", "Name", DataViewRowState.CurrentRows);
+            AddNewDataRowView(dv);
+
+            grv2.DataSource = dv;
+            grv2.DataBind();
+
+            //namirame indexa na reda s value miranda
+            int index = dv.Find("Miranda");
+            dv[index]["Name"] = "deni";
+            grv2.DataSource = dv;
+            grv2.DataBind();
+            //end na parcheto kod;
         }
 
         //add row only on the view
