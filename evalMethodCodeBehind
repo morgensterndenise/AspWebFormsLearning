@@ -1,0 +1,30 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+namespace DataTablesAndViewsExercise
+{
+    public partial class EvalTest : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            var products = new List<Product>();
+            products.Add(new Product() { ProductID = 1, Name = "Bike", Price = 150.00 });
+            products.Add(new Product() { ProductID = 2, Name = "Helmet", Price = 19.99 });
+            products.Add(new Product() { ProductID = 3, Name = "Tire", Price = 10.00 });
+
+            gv.DataSource = products;
+           gv.DataBind();
+        }
+
+        public class Product
+        {
+            public int ProductID { get; set; }
+            public string Name { get; set; }
+            public double Price { get; set; }
+        }
+    }
+}
